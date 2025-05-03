@@ -1,0 +1,6 @@
+flask
+transformers
+diffusers
+torch
+torchvision
+accelerate
