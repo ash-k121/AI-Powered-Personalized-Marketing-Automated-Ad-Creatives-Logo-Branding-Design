@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Image Brand Marketing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --primary-hover: #5b4bc4;
+            --secondary-color: #a8a8a8;
+            --background-color: #121212;
+            --card-background: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #333333;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --input-background: #2d2d2d;
+            --error-bg: #3a1a1a;
+            --error-text: #ff6b6b;
+            --success-bg: #1a3a1a;
+            --success-text: #6bff6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .form-container {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+            animation: slideUp 0.5s ease-out;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-container:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .form-container h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            background-color: var(--input-background);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+        }
+
+        input[type="file"]:hover {
+            border-color: var(--primary-color);
+            background-color: var(--card-background);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background-color: var(--input-background);
+            color: var(--text-color);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-container {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .result-image {
+            max-width: 100%;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .download-btn {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background-color: var(--success-text);
+            color: var(--success-bg);
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: var(--error-text);
+            background-color: var(--error-bg);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            display: none;
+            border: 1px solid var(--error-text);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading-spinner {
+            border: 4px solid var(--border-color);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        .pipeline-info {
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: var(--box-shadow);
+            animation: fadeIn 1s ease-in;
+            border: 1px solid var(--border-color);
+        }
+
+        .pipeline-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .pipeline-info ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .pipeline-info li {
+            margin-bottom: 10px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .pipeline-info li:before {
+            content: "→";
+            color: var(--primary-color);
+            position: absolute;
+            left: -20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--card-background);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-hover);
+        }
+
+        .use-latest-btn {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        .use-latest-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .use-latest-btn:disabled {
+            background-color: var(--border-color);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .file-input-container {
+            position: relative;
+        }
+
+        .file-input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Image Brand Marketing</h1>
+            <p class="subtitle">Transform your brand using advanced AI models</p>
+        </header>
+
+        <div class="form-container">
+            <h2>🎨 Img2Img Only</h2>
+            <form id="img2imgForm" action="/img2img" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="image" class="file-input-label">Upload Image</label>
+                    <div class="file-input-container">
+                        <input type="file" name="image" accept="image/*" required>
+                        <button type="button" class="use-latest-btn" onclick="useLatestImage(this)">Use Latest Generated Image</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="prompt">Prompt</label>
+                    <textarea name="prompt" required>A clean minimalist logo with smooth pastel colors, flat modern style.</textarea>
+                </div>
+                <button type="submit">Run Img2Img</button>
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Processing your image...</p>
+                </div>
+            </form>
+            <div class="result-container" id="img2imgResult">
+                <img class="result-image" src="" alt="Processed Image">
+                <a class="download-btn" href="#" download>Download Image</a>
+            </div>
+            <div class="error-message" id="img2imgError"></div>
+        </div>
+
+        <div class="form-container">
+            <h2>🔁 Full Pipeline (Img2Img + ControlNet)</h2>
+            <form id="fullPipelineForm" action="/process" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="image" class="file-input-label">Upload Image</label>
+                    <div class="file-input-container">
+                        <input type="file" name="image" accept="image/*" required>
+                        <button type="button" class="use-latest-btn" onclick="useLatestImage(this)">Use Latest Generated Image</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="prompt">Prompt</label>
+                    <textarea name="prompt" required>A clean minimalist logo with smooth pastel colors, flat modern style.</textarea>
+                </div>
+                <button type="submit">Run Full Pipeline</button>
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Processing your image...</p>
+                </div>
+            </form>
+            <div class="result-container" id="fullPipelineResult">
+                <img class="result-image" src="" alt="Processed Image">
+                <a class="download-btn" href="#" download>Download Image</a>
+            </div>
+            <div class="error-message" id="fullPipelineError"></div>
+        </div>
+
+        <div class="form-container">
+            <h2>🎯 ControlNet Only</h2>
+            <form id="controlnetForm" action="/controlnet" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="image" class="file-input-label">Upload Image</label>
+                    <div class="file-input-container">
+                        <input type="file" name="image" accept="image/*" required>
+                        <button type="button" class="use-latest-btn" onclick="useLatestImage(this)">Use Latest Generated Image</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="prompt">Prompt</label>
+                    <textarea name="prompt" required>A clean minimalist logo with smooth pastel colors, flat modern style.</textarea>
+                </div>
+                <button type="submit">Run ControlNet Only</button>
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Processing your image...</p>
+                </div>
+            </form>
+            <div class="result-container" id="controlnetResult">
+                <img class="result-image" src="" alt="Processed Image">
+                <a class="download-btn" href="#" download>Download Image</a>
+            </div>
+            <div class="error-message" id="controlnetError"></div>
+        </div>
+
+        <div class="form-container">
+            <h2>🎨 Logo Generation </h2>
+            <form id="logoForm" action="/generate-logo" method="post">
+                <div class="form-group">
+                    <label for="prompt">Logo Description</label>
+                    <textarea name="prompt" required placeholder="Describe your logo (e.g., minimalist tech logo, colorful food brand, black and white finance symbol)"></textarea>
+                    <p class="form-hint">Tip: Use words like 'detailed', 'minimalist', 'colorful', or 'black and white' to control the style.</p>
+                </div>
+                <button type="submit">Generate Logo</button>
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Generating your logo...</p>
+                </div>
+            </form>
+            <div class="result-container" id="logoResult">
+                <img class="result-image" src="" alt="Generated Logo">
+                <a class="download-btn" href="#" download>Download Logo</a>
+            </div>
+            <div class="error-message" id="logoError"></div>
+        </div>
+
+        <div class="pipeline-info">
+            <h3>About the Pipeline</h3>
+            <ul>
+                <li>Img2Img transforms your image while preserving its structure</li>
+                <li>Full Pipeline combines Stable Diffusion and ControlNet for enhanced image transformation</li>
+                <li>ControlNet Only uses edge detection for structural preservation</li>
+                <li>Processed images are returned in high quality PNG format</li>
+                <li>Optimized for memory efficiency and processing speed</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let latestImageUrl = null;
+
+        function useLatestImage(button) {
+            const form = button.closest('form');
+            const fileInput = form.querySelector('input[type="file"]');
+            const loading = form.querySelector('.loading');
+            
+            loading.style.display = 'block';
+            button.disabled = true;
+            
+            fetch('/get-latest-image')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        latestImageUrl = data.url;
+                        fileInput.required = false;
+                        button.textContent = 'Using Latest Image';
+                        button.style.backgroundColor = 'var(--success-bg)';
+                        button.style.color = 'var(--success-text)';
+                    } else {
+                        showError(form, 'No previous image found');
+                    }
+                })
+                .catch(error => {
+                    showError(form, 'Failed to get latest image');
+                    console.error('Error:', error);
+                })
+                .finally(() => {
+                    loading.style.display = 'none';
+                    button.disabled = false;
+                });
+        }
+
+        function showLoading(form) {
+            const loading = form.querySelector('.loading');
+            loading.style.display = 'block';
+            form.querySelector('button').disabled = true;
+        }
+
+        function hideLoading(form) {
+            const loading = form.querySelector('.loading');
+            loading.style.display = 'none';
+            form.querySelector('button').disabled = false;
+        }
+
+        function showError(form, message) {
+            const errorDiv = form.parentElement.querySelector('.error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError(form) {
+            const errorDiv = form.parentElement.querySelector('.error-message');
+            errorDiv.style.display = 'none';
+        }
+
+        function showResult(form, imageUrl) {
+            const resultContainer = form.parentElement.querySelector('.result-container');
+            const img = resultContainer.querySelector('.result-image');
+            const downloadBtn = resultContainer.querySelector('.download-btn');
+            
+            img.src = imageUrl;
+            downloadBtn.href = imageUrl;
+            resultContainer.style.display = 'block';
+        }
+
+        function handleFormSubmit(form) {
+            const formData = new FormData(form);
+            
+            // If we're using the latest image, don't include the file input
+            if (latestImageUrl) {
+                formData.delete('image');
+            }
+            
+            showLoading(form);
+            hideError(form);
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading(form);
+                if (data.success) {
+                    showResult(form, data.url);
+                    // Reset the latest image button state
+                    const useLatestBtn = form.querySelector('.use-latest-btn');
+                    if (useLatestBtn) {
+                        useLatestBtn.textContent = 'Use Latest Generated Image';
+                        useLatestBtn.style.backgroundColor = '';
+                        useLatestBtn.style.color = '';
+                    }
+                    // Reset the file input requirement
+                    const fileInput = form.querySelector('input[type="file"]');
+                    fileInput.required = true;
+                    latestImageUrl = null;
+                } else {
+                    showError(form, data.error || 'An error occurred while processing the image.');
+                }
+            })
+            .catch(error => {
+                hideLoading(form);
+                showError(form, 'An error occurred while processing the image.');
+                console.error('Error:', error);
+            });
+        }
+
+        document.getElementById('img2imgForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this);
+        });
+
+        document.getElementById('fullPipelineForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this);
+        });
+
+        document.getElementById('controlnetForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this);
+        });
+
+        document.getElementById('logoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmit(this);
+        });
+    </script>
+</body>
+</html>
